@@ -2,7 +2,8 @@ android_external_sshfs
 ======================
 
 One liner: Fuse based ssh file system client for android devices  
-Borrowed from off of code from here: git://gitorious.org/android-pc/external-sshfs.git  
+
+Borrowed from code from here: git://gitorious.org/android-pc/external-sshfs.git  
 Which was originally borrowed from here: http://fuse.sourceforge.net/sshfs.html  
 adapted to compile into cyanogenmod by me.  
 
