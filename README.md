@@ -16,8 +16,11 @@ How to build:
 This was only tested under cyanogenmod cm-10.2. It'll probably work fine in other versions of CM, but probably not with other roms (because of glib coming from Focal).  
 This module will build a single binary executable file: 'sshfs' that will be installed into /system/xbin  
 
+
 Clone this repo into your cyanogenmod source tree in a folder: external/sshfs  
 Building this pulls in header files and shared objects from the fuse module and the Focal module in the cyanogenmod source tree (it doesn't actually depend on Focal, that's just where I found glib, which really should be moved out of Focal)  
+
+
 To build:  
 cd to external/sshfs  
 then `mm -B` to build the module  
@@ -36,5 +39,5 @@ It also obviously assumes that you have compiled this project and installed the 
  * `mkdir /data/media/0/sshfs_mount`
 * Mount your ssh share on your device
  * `sshfs USER@SERVER:~ /data/media/0/sshfs_mount -o allow_other`
- * You'll now be asked to enter your ssh password, enter it
+ * You'll now be asked to enter your ssh password, enter it  
 Your home folder on your ssh server is now mounted to your android device as if the files in it were physically on your device.
