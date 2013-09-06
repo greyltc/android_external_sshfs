@@ -45,8 +45,9 @@ The example will mount your home directory on your ssh server to an empty folder
 * Create an empty directory you will be mounting to (this can be anywhere you like on your android device, it just needs to be an empty directory). The following example makes a folder in the "sdcard" under Android 4.3
  * `mkdir /data/media/0/sshfs_mount`
 * Mount your ssh share on your device
- * `sshfs USER@SERVER: /data/media/0/sshfs_mount -o allow_other`
+ * `sshfs USER@SERVER: /data/media/0/sshfs_mount -o allow_other - o ro`
  * You'll now be asked to enter your ssh password, enter it  
 
+The -o ro option means this will be a read only mount, which is certianly safer. Don't blame me if you omit the -o ro swith and upir files are blown away!
 
 Your home folder on your ssh server is now mounted to your android device as if the files in it were physically on your device.
