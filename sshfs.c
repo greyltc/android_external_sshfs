@@ -3698,6 +3698,11 @@ int main(int argc, char *argv[])
 	ssh_add_arg("-x");
 	ssh_add_arg("-a");
 	ssh_add_arg("-oClearAllForwardings=yes");
+	
+	if (argc == 1){
+		printf("see `%s -h' for usage\n", sshfs.progname);
+		exit(1);
+	}
 
 	if (fuse_opt_parse(&args, &sshfs, sshfs_opts, sshfs_opt_proc) == -1 ||
 	    parse_workarounds() == -1)
