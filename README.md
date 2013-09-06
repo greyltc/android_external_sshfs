@@ -9,6 +9,9 @@ Which was originally borrowed from here: http://fuse.sourceforge.net/sshfs.html
 adapted to compile into cyanogenmod by me.  
 
 
+This project provides (for free) the functionality promised by the currently broken and ~$2.75 app in the play store called SSHFSAndroid: https://play.google.com/store/apps/details?id=com.chaos9k.sshfsandroid
+
+
 This project will allow you to *securely* mount a folder served up by an ssh server to your android device.
 
 
