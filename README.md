@@ -3,11 +3,14 @@ android_external_sshfs
 
 One liner: Fuse based ssh file system client for android devices  
 
+
 Borrowed from code from here: git://gitorious.org/android-pc/external-sshfs.git  
 Which was originally borrowed from here: http://fuse.sourceforge.net/sshfs.html  
 adapted to compile into cyanogenmod by me.  
 
+
 This project will allow you to *securely* mount a folder served up by an ssh server to your android device.
+
 
 A typical use case for this would be that you have a phone with 8GB of non-expandable storage and you want access to your 100GB music collection from anywhere (via cell data access). This project allows all the apps on your phone to see your entire music/movie/book/document/whatever collection as if your files were on your device (if your data connection permits it).
 
@@ -40,4 +43,6 @@ It also obviously assumes that you have compiled this project and installed the 
 * Mount your ssh share on your device
  * `sshfs USER@SERVER:~ /data/media/0/sshfs_mount -o allow_other`
  * You'll now be asked to enter your ssh password, enter it  
+
+
 Your home folder on your ssh server is now mounted to your android device as if the files in it were physically on your device.
