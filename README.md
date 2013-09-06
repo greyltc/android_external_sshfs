@@ -34,14 +34,15 @@ How to use:
 -----------
 This example assumes __you already have a ssh server__ running somewhere on a machine with hostname SERVER that you can log into as USER  
 It also obviously assumes that you have compiled this project and installed the binary it produces into your device (only tested with cyanogenmod v cm-10.2)
+The example will mount your home directory on your ssh server to an empty folder on your android device.
 * Initiate a shell session on your android device somehow.
  * Typically, either via `adb shell` on your computer or in a terminal emulator on your device.
-* Elevate to root user
+* Elevate to root user (for some silly reason FUSE needs root privilages)
  * `su`
 * Create an empty directory you will be mounting to (this can be anywhere you like on your android device, it just needs to be an empty directory). The following example makes a folder in the "sdcard" under Android 4.3
  * `mkdir /data/media/0/sshfs_mount`
 * Mount your ssh share on your device
- * `sshfs USER@SERVER:~ /data/media/0/sshfs_mount -o allow_other`
+ * `sshfs USER@SERVER: /data/media/0/sshfs_mount -o allow_other`
  * You'll now be asked to enter your ssh password, enter it  
 
 
