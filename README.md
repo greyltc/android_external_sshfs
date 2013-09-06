@@ -28,8 +28,11 @@ Building this pulls in header files and shared objects from the fuse module and 
 
 
 To build:  
-cd to external/sshfs  
-then `mm -B` to build the module  
+```
+git clone git@github.com:l3iggs/android_external_sshfs.git ~/android/system/external/sshfs
+cd ~/android/system/external/sshfs
+mm -B
+```  
 After a successful compile, you should now see something like `Install: android/system/out/target/product/flo/system/xbin/sshfs` letting you know the build was successful and the executable was copied to your output directory  
 Get the binary into the /system/xbin folder on your device using your favorite method (ensuring the execute permission bit is set so you can actually run the thing once it's there)
 
