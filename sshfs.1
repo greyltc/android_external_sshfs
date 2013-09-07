@@ -7,7 +7,7 @@ SSHFS \- filesystem client based on ssh
 \fBsshfs\fP [\fIuser\fP@]\fBhost\fP:[\fIdir\fP] \fBmountpoint\fP [\fIoptions\fP]
 .SS unmounting
 .TP
-\fBfusermount -u mountpoint\fP
+\fBfusermount \-u mountpoint\fP
 .SH DESCRIPTION
 SSHFS (Secure SHell FileSystem) is a file system for Linux (and other
 operating systems with a FUSE implementation, such as Mac OS X or FreeBSD)
@@ -212,10 +212,10 @@ enable caching based on modification times
 set file permissions (octal)
 .TP
 \fB\-o\fR uid=N
-set file owner
+set file owner (number)
 .TP
 \fB\-o\fR gid=N
-set file group
+set file group (number)
 .TP
 \fB\-o\fR entry_timeout=T
 cache timeout for names (1.0s)

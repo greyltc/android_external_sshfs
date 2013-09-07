@@ -215,7 +215,6 @@ struct sshfs {
 	int sync_write;
 	int sync_read;
 	int debug;
-	int ssh_yes;
 	int foreground;
 	int reconnect;
 	int delay_connect;
@@ -248,6 +247,7 @@ struct sshfs {
 	int ext_statvfs;
 	int ext_hardlink;
 	mode_t mnt_mode;
+	struct fuse_operations *op;
 
 	/* statistics */
 	uint64_t bytes_sent;
@@ -341,7 +341,6 @@ static struct fuse_opt sshfs_opts[] = {
 	SSHFS_OPT("max_write=%u",      max_write, 0),
 	SSHFS_OPT("ssh_protocol=%u",   ssh_ver, 0),
 	SSHFS_OPT("-1",                ssh_ver, 1),
-	SSHFS_OPT("-y",                ssh_yes, 1),
 	SSHFS_OPT("workaround=%s",     workarounds, 0),
 	SSHFS_OPT("idmap=none",        idmap, IDMAP_NONE),
 	SSHFS_OPT("idmap=user",        idmap, IDMAP_USER),
@@ -1075,6 +1074,7 @@ static int start_ssh(void)
 			close(sshfs.ptyslavefd);
 			close(sshfs.ptyfd);
 		}
+
 		if (sshfs.debug) {
 			int i;
 
@@ -1913,6 +1913,22 @@ static int sshfs_getattr(const char *path, struct stat *stbuf)
 		buf_free(&outbuf);
 	}
 	buf_free(&buf);
+	return err;
+}
+
+static int sshfs_access(const char *path, int mask)
+{
+	struct stat stbuf;
+	int err = 0;
+
+	if (mask & X_OK) {
+		err = sshfs.op->getattr(path, &stbuf);
+		if (!err) {
+			if (S_ISREG(stbuf.st_mode) &&
+			    !(stbuf.st_mode & (S_IXUSR|S_IXGRP|S_IXOTH)))
+				err = -EACCES;
+		}
+	}
 	return err;
 }
 
@@ -3116,6 +3132,7 @@ static struct fuse_cache_operations sshfs_oper = {
 	.oper = {
 		.init       = sshfs_init,
 		.getattr    = sshfs_getattr,
+		.access     = sshfs_access,
 		.readlink   = sshfs_readlink,
 		.mknod      = sshfs_mknod,
 		.mkdir      = sshfs_mkdir,
@@ -3159,7 +3176,6 @@ static void usage(const char *progname)
 "    -C                     equivalent to '-o compression=yes'\n"
 "    -F ssh_configfile      specifies alternative ssh configuration file\n"
 "    -1                     equivalent to '-o ssh_protocol=1'\n"
-"    -y                     tell ssh to accept unknown hosts (dropbear only)\n"
 "    -o reconnect           reconnect to server\n"
 "    -o delay_connect       delay connection to server\n"
 "    -o sshfs_sync          synchronous writes\n"
@@ -3217,10 +3233,11 @@ static int is_ssh_opt(const char *arg)
 
 static int sshfs_fuse_main(struct fuse_args *args)
 {
+	sshfs.op = cache_init(&sshfs_oper);
 #if FUSE_VERSION >= 26
-	return fuse_main(args->argc, args->argv, cache_init(&sshfs_oper), NULL);
+	return fuse_main(args->argc, args->argv, sshfs.op, NULL);
 #else
-	return fuse_main(args->argc, args->argv, cache_init(&sshfs_oper));
+	return fuse_main(args->argc, args->argv, sshfs.op);
 #endif
 }
 
@@ -3563,11 +3580,27 @@ static void read_id_map(char *file, uint32_t *(*map_fn)(char *),
 	FILE *fp;
 	char line[LINE_MAX];
 	unsigned int lineno = 0;
+	uid_t local_uid = getuid();
 
 	fp = fopen(file, "r");
 	if (fp == NULL) {
 		fprintf(stderr, "failed to open '%s': %s\n",
 				file, strerror(errno));
+		exit(1);
+	}
+	struct stat st;
+	if (fstat(fileno(fp), &st) == -1) {
+		fprintf(stderr, "failed to stat '%s': %s\n", file,
+				strerror(errno));
+		exit(1);
+	}
+	if (st.st_uid != local_uid) {
+		fprintf(stderr, "'%s' is not owned by uid %lu\n", file,
+				(unsigned long)local_uid);
+		exit(1);
+	}
+	if (st.st_mode & S_IWGRP || st.st_mode & S_IWOTH) {
+		fprintf(stderr, "'%s' is writable by other users\n", file);
 		exit(1);
 	}
 
@@ -3698,11 +3731,6 @@ int main(int argc, char *argv[])
 	ssh_add_arg("-x");
 	ssh_add_arg("-a");
 	ssh_add_arg("-oClearAllForwardings=yes");
-	
-	if (argc == 1){
-		printf("see `%s -h' for usage\n", sshfs.progname);
-		exit(1);
-	}
 
 	if (fuse_opt_parse(&args, &sshfs, sshfs_opts, sshfs_opt_proc) == -1 ||
 	    parse_workarounds() == -1)
@@ -3782,8 +3810,6 @@ int main(int argc, char *argv[])
 	ssh_add_arg(sftp_server);
 	free(sshfs.sftp_server);
 
-	if(sshfs.ssh_yes != 0)
-		ssh_add_arg("-y");
 
 	res = cache_parse_options(&args);
 	if (res == -1)
@@ -3849,7 +3875,8 @@ int main(int argc, char *argv[])
 		if (res == -1)
 			perror("WARNING: failed to set FD_CLOEXEC on fuse device");
 
-		fuse = fuse_new(ch, &args, cache_init(&sshfs_oper),
+		sshfs.op = cache_init(&sshfs_oper);
+		fuse = fuse_new(ch, &args, sshfs.op,
 				sizeof(struct fuse_operations), NULL);
 		if (fuse == NULL) {
 			fuse_unmount(mountpoint, ch);
