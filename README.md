@@ -49,7 +49,7 @@ The example will mount your home directory on your ssh server to an empty folder
  * `mkdir /data/media/0/sshfs_mount`
 * Mount your ssh share on your device
  * `sshfs USER@SERVER: /data/media/0/sshfs_mount -o allow_other -o ro`
- * You'll now be asked to enter your ssh password, enter it  
+ * You'll now be asked to enter your ssh password, enter it 
 
 The -o ro option means this will be a read only mount, which is certianly safer. Don't blame me if you omit the -o ro swith and upir files are blown away!
 
