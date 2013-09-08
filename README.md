@@ -1,30 +1,25 @@
 android_external_sshfs
 ======================
 
-One liner: Fuse based ssh file system client for android devices  
+One liner: FUSE based ssh file system client for android devices  
 
+Code taken directly from here: http://fuse.sourceforge.net/sshfs.html and adapted to compile into cyanogenmod by me.  
 
-Borrowed from code from here: git://gitorious.org/android-pc/external-sshfs.git  
-Which was originally borrowed from here: http://fuse.sourceforge.net/sshfs.html  
-adapted to compile into cyanogenmod by me.  
+This project will allow you to *securely* mount a folder served up by an ssh server to your android device from anywhere.  
 
+A typical use case for this would be that you have a phone with 8GB of non-expandable storage and you want access to your 100GB music collection from anywhere (via cell data access). This project allows all the apps on your phone to see your entire music/movie/book/document/whatever collection as if your files were on your device (if your data connection permits it).  
 
-This project provides (for free) the functionality promised by the currently broken and ~$2.75 app in the play store called SSHFSAndroid: https://play.google.com/store/apps/details?id=com.chaos9k.sshfsandroid
+This project provides (for free) the functionality promised by the currently broken and ~$2.75 app in the play store called SSHFSAndroid: https://play.google.com/store/apps/details?id=com.chaos9k.sshfsandroid  
 
-
-This project will allow you to *securely* mount a folder served up by an ssh server to your android device.
-
-
-A typical use case for this would be that you have a phone with 8GB of non-expandable storage and you want access to your 100GB music collection from anywhere (via cell data access). This project allows all the apps on your phone to see your entire music/movie/book/document/whatever collection as if your files were on your device (if your data connection permits it).
 
 How to build:
 -------------
-This was only tested under cyanogenmod cm-10.2. It'll probably work fine in other versions of CM, but probably not with other roms (because of glib coming from Focal).  
 This module will build a single binary executable file: 'sshfs' that will be installed into /system/xbin  
 
+This was only tested under cyanogenmod cm-10.2. It'll probably work fine in other versions of CM, but probably not with other roms (because of glib coming from Focal).  
 
 Clone this repo into your cyanogenmod source tree in a folder: external/sshfs  
-Building this pulls in header files and shared objects from the fuse module and the Focal module in the cyanogenmod source tree (it doesn't actually depend on Focal, that's just where I found glib, which really should be moved out of Focal)  
+Building this pulls in header files and shared objects from the external/fuse module and the external/Focal module in the cyanogenmod source tree (it doesn't actually depend on Focal, that's just where I found glib, which really should be moved out of Focal)  
 
 
 To build:  
