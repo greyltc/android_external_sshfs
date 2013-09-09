@@ -87,14 +87,12 @@ SSHFS options:
     -o SSHOPT=VAL          ssh options (see man ssh_config)
 ```
 
-This example assumes:
-A) __you already have a ssh server__ running somewhere on a machine with hostname (or IP) SERVER that you can log into as USER  
-B) Have created an __empty directory__ on your device to mount to at the following location: /data/media/0/sshfsmount
+This example assumes __you already have a ssh server__ running somewhere on a machine with hostname (or IP) SERVER that you can log into as USER  
+B) you have created an __empty directory__ on your device to mount to at the following location: `/data/media/0/sshfsmount`
 
 ### Mounting
-In a shell on your android device type:  
+Make sure `/data/media/0/sshfsmount` exists and is an empty directory and in a shell on your android device type:  
 ```
-cd /data/media/0/sshfsmount
 su
 sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no 
 ```  
@@ -140,16 +138,13 @@ After you setup passwordless login (as described above) you can:
 
 ## Less tested switches
 Here are some switches that are less tested but may be required to get things to work properly  in certain scenarios  
-`-o ServerAliveInterval=300` ServerAliveInterval
-             Sets a timeout interval in seconds after which if no data has been received from the server, ssh(1) will send a message through the encrypted channel to request a response from the server. The default is 0, indicating that these messages will not be sent t
-o the server
-.
-`-o TCPKeepAlive=no` TCPKeepAlive
-    Specifies whether the system should send TCP keepalive messages to the other side.  If they are sent, de
-ath of the connection or crash of one of the machines will be properly noticed.  This option only uses TCP keepalives (as opposed to using ssh level keepalives), so takes a long time to notice when the connection dies.  As such, you probably want the ServerAliveInterval option as well. However, this means that connections will die if the route is down temporarily, and some people find it annoying.
-    The default is “yes” (to send TCP keepalive messages), and the client will notice if the network goes do
-wn or the remote host dies.  This is important in scripts, and many users want it too.
-    To disable TCP keepalive messages, the value should be set to “no”.
+`-o ServerAliveInterval=300` ServerAliveInterval  
+             Sets a timeout interval in seconds after which if no data has been received from the server, ssh(1) will send a message through the encrypted channel to request a response from the server. The default is 0, indicating that these messages will not be sent to the server  
+
+`-o TCPKeepAlive=no` TCPKeepAlive  
+    Specifies whether the system should send TCP keepalive messages to the other side.  If they are sent, death of the connection or crash of one of the machines will be properly noticed.  This option only uses TCP keepalives (as opposed to using ssh level keepalives), so takes a long time to notice when the connection dies.  As such, you probably want the ServerAliveInterval option as well. However, this means that connections will die if the route is down temporarily, and some people find it annoying.  
+    The default is “yes” (to send TCP keepalive messages), and the client will notice if the network goes down or the remote host dies.  This is important in scripts, and many users want it too.  
+    To disable TCP keepalive messages, the value should be set to “no”.  
 
 ## Limitations
 * Media files mounted this way will NOT be picked up automatically by an automated media scanner (media scanning over a network connection is a bad idea anyway).
