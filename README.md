@@ -93,26 +93,32 @@ SSHFS options:
 
 This example assumes __you already have a ssh server__ running somewhere on a machine with hostname SERVER that you can log into as USER  
 
-The example will mount your home directory on your ssh server to an empty folder in the sdcard of your android device.
+The example will create an empty directory called sshfsmount in your android device's 'sdcard' and mount your ssh server home directory to it.
 
 In a shell on your android device type:  
 ```
-mkdir /storage/sdcard0/sshfsmount
+mkdir /data/media/0/sshfsmount
 su
-sshfs USER@SERVER: /storage/sdcard0/sshfsmount -o allow_other -o ro
+sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o sshfs_debug -o debug
 ```  
-You may be asked to authenticate the key fingerprint of SERVER, type `yes` there.  
-You will be asked for your ssh password for USER.  
+Replace USER with your ssh login name and SERVER with the server hostname or IP address (note the colon after SERVER is intentional). You will be asked for your ssh password for USER. 
+* `-o ro` means you'll mount the files as read only (recommended to prevent file damage because this project is exeperimental)
+* `-o allow_other` sets the permissions of the mounted files so that you can access them
+* `-o follow_symlinks` enables symlinks in your ssh share to work properly
+* `-o StrictHostKeyChecking=no` bypasses a prompt for a security measure used to prevent MITM attacks
+* `-o sshfs_debug -o debug` helps with printing error messages to the terminal, can be safely removed once things are working
 
-When the final command completes sucessfully you'll be dumped back to the command line with no output. You can verify that the mount completed properly by issuing `ls /storage/sdcard0/sshfs_mount` you should see the directory structure of your ssh home directory.  
+When the final command completes sucessfully you'll be dumped back to the command line with no output. You can verify that the mount completed properly by issuing `ls /data/media/0/sshfsmount` you should see the directory structure of your ssh home directory.  
 
-Your home folder on your ssh server is now mounted to your android device as if the files in it were physically on your device.
+Your home folder on your ssh server is now mounted to your android device sdcard in a folder called sshfsmount as if the files in it were physically on your device. You won't need root to access these files.
+
+To unmount your sshfs mount issue `umount /data/media/0/sshfsmount` as root. For this unmount to complete sucessfully none of the mounted files can be in use and no file manager or shell can be in the mounted directory.
 
 Limitations
 -----------
-* Media files mounted this way will not be picked up automatically by an automated media scanner.
-* Mounting to any arbitrary directory doesn't always work (like directly to the SD card), this may be because some directories are already fuse mounts and nested fuse mounting seems to be unreliable. I've had the most luck with mounting to /data/local/
-* Errors are currently not being displayed anywhere (that I'm aware of). This means that if anything goes wrong with the command it simply returns 1 and dumps you back to the command line with no indication of what whent wrong.
+* Media files mounted this way will NOT be picked up automatically by an automated media scanner (media scanning over a network connection is a bad idea anyway).
+* Mounting to any arbitrary directory on your device has not been fully tested and may not always work. Mounting to /data/media/0/sshfsmount as in the example above works reliably for me, as does mounting to /data/local/sshfsmount. YMMV for mounting to other directories.
+* By default, error message reporting doesn't work. If the sshfs command encounters any errors it will return 1 and exit silently. sshfs prints its error messages to stderr which appaireently android sends to /dev/null. As a workaround for troubleshooting add `-o sshfs_debug -o debug` to get more verbose error messages to appear in the terminal.
 
 
 
