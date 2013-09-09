@@ -139,12 +139,12 @@ After you setup passwordless login (as described above) you can:
 ## Less tested switches
 Here are some switches that are less tested but may be required to get things to work properly  in certain scenarios  
 `-o ServerAliveInterval=300` ServerAliveInterval  
-             Sets a timeout interval in seconds after which if no data has been received from the server, ssh(1) will send a message through the encrypted channel to request a response from the server. The default is 0, indicating that these messages will not be sent to the server  
+Sets a timeout interval in seconds after which if no data has been received from the server, ssh(1) will send a message through the encrypted channel to request a response from the server. The default is 0, indicating that these messages will not be sent to the server  
 
 `-o TCPKeepAlive=no` TCPKeepAlive  
-    Specifies whether the system should send TCP keepalive messages to the other side.  If they are sent, death of the connection or crash of one of the machines will be properly noticed.  This option only uses TCP keepalives (as opposed to using ssh level keepalives), so takes a long time to notice when the connection dies.  As such, you probably want the ServerAliveInterval option as well. However, this means that connections will die if the route is down temporarily, and some people find it annoying.  
-    The default is “yes” (to send TCP keepalive messages), and the client will notice if the network goes down or the remote host dies.  This is important in scripts, and many users want it too.  
-    To disable TCP keepalive messages, the value should be set to “no”.  
+Specifies whether the system should send TCP keepalive messages to the other side.  If they are sent, death of the connection or crash of one of the machines will be properly noticed.  This option only uses TCP keepalives (as opposed to using ssh level keepalives), so takes a long time to notice when the connection dies.  As such, you probably want the ServerAliveInterval option as well. However, this means that connections will die if the route is down temporarily, and some people find it annoying.  
+The default is “yes” (to send TCP keepalive messages), and the client will notice if the network goes down or the remote host dies.  This is important in scripts, and many users want it too.  
+To disable TCP keepalive messages, the value should be set to “no”.  
 
 ## Limitations
 * Media files mounted this way will NOT be picked up automatically by an automated media scanner (media scanning over a network connection is a bad idea anyway).
