@@ -114,6 +114,29 @@ Your home folder on your ssh server is now mounted to your android device sdcard
 
 To unmount your sshfs mount issue `umount /data/media/0/sshfsmount` as root. For this unmount to complete sucessfully none of the mounted files can be in use and no file manager or shell can be in the mounted directory.
 
+Passwordless login
+------------------
+It's a real drag to have to enter your password every time you want to connect to your server. Especially if you're trying to automate the process. Follow these steps to setup public key authentication to log into your server without typing in a password on your device.
+
+In a shell on your android device type:
+```
+su
+ssh-keygen
+```
+Just press enter at the prompts here to generate a key with no passphrase. Your public key should now be in /data/.ssh/id_rsa.pub
+Now copy this key to your ssh server:
+```
+cat /data/.ssh/id_rsa.pub | ssh USER@SERVER "mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys"
+```
+Replace USER with your ssh login name and SERVER with the server hostname or IP address  
+You'll have to enter your password here one last time and that's it! You'll no longer be prompted for a password when using sshfs. Note that you must do this for each server you with to set up passwordless login to.
+
+Other usage ideas
+-----------------
+After you setup passwordless login (as described above) you can:
+* Use the QuickTerminal app to add a buttons to your homescreen that mount and unmount your files
+* Use the Tasker app to mount and unmount your files when you connect & disconnect to a specific Wi-Fi network
+
 Limitations
 -----------
 * Media files mounted this way will NOT be picked up automatically by an automated media scanner (media scanning over a network connection is a bad idea anyway).
