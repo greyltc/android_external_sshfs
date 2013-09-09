@@ -37,7 +37,7 @@ After a successful compile, you should now see something like
 Pushing: system/xbin/sshfs
 5061 KB/s (125476 bytes in 0.024s)
 ```
-If you see that, you know the binary was built and pushed sucessfully to your device. Otherwisem, the compile failed.
+If you see that, you know the binary was built and pushed sucessfully to your device. Otherwise, the compile failed.
 
 How to use
 ----------
