@@ -108,7 +108,7 @@ Replace USER with your ssh login name and SERVER with the server hostname or IP 
 * `-o StrictHostKeyChecking=no` bypasses a prompt for a security measure used to prevent MITM attacks
 * `-o sshfs_debug -o debug` helps with printing error messages to the terminal, can be safely removed once things are working
 
-When the final command completes sucessfully you'll be dumped back to the command line with no output. You can verify that the mount completed properly by issuing `ls /data/media/0/sshfsmount` you should see the directory structure of your ssh home directory.  
+When the `sshfs` command completes sucessfully you'll be dumped back to the command line with no output. You can verify that the mount completed properly by issuing `ls /data/media/0/sshfsmount` you should see the directory structure of your ssh home directory.  
 
 Your home folder on your ssh server is now mounted to your android device sdcard in a folder called sshfsmount as if the files in it were physically on your device. You won't need root to access these files.
 
@@ -118,7 +118,7 @@ Limitations
 -----------
 * Media files mounted this way will NOT be picked up automatically by an automated media scanner (media scanning over a network connection is a bad idea anyway).
 * Mounting to any arbitrary directory on your device has not been fully tested and may not always work. Mounting to /data/media/0/sshfsmount as in the example above works reliably for me, as does mounting to /data/local/sshfsmount. YMMV for mounting to other directories.
-* By default, error message reporting doesn't work. If the sshfs command encounters any errors it will return 1 and exit silently. sshfs prints its error messages to stderr which appaireently android sends to /dev/null. As a workaround for troubleshooting add `-o sshfs_debug -o debug` to get more verbose error messages to appear in the terminal.
+* By default, error message reporting doesn't work. If the sshfs command encounters any errors it will return 1 and exit silently. sshfs prints its error messages to stderr which appaireently android sends to /dev/null. As a workaround for troubleshooting add `-o sshfs_debug -o debug` to get more verbose error messages to appear in the terminal, still all errors may not be visible.
 
 
 
