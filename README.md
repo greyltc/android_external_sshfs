@@ -115,6 +115,7 @@ Limitations
 -----------
 * Media files mounted this way will not be picked up automatically by an automated media scanner.
 * Mounting to any arbitrary directory doesn't always work, this may be because some directories are already fuse mounts and nested fuse mounting is failing. To be safe, mount in /data/local/
+* Errors are currently not being displayed anywhere (that I'm aware of). This means that if anything goes wrong with the command it simply returns 1 and dumps you back to the command line with no indication of what whent wrong.
 
 
 
