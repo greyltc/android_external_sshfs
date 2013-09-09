@@ -99,14 +99,13 @@ In a shell on your android device type:
 ```
 mkdir /data/media/0/sshfsmount
 su
-sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o sshfs_debug -o debug
+sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no 
 ```  
 Replace USER with your ssh login name and SERVER with the server hostname or IP address (note the colon after SERVER is intentional). You will be asked for your ssh password for USER. 
 * `-o ro` means you'll mount the files as read only (recommended to prevent file damage because this project is exeperimental)
 * `-o allow_other` sets the permissions of the mounted files so that you can access them
 * `-o follow_symlinks` enables symlinks in your ssh share to work properly
 * `-o StrictHostKeyChecking=no` bypasses a prompt for a security measure used to prevent MITM attacks
-* `-o sshfs_debug -o debug` helps with printing error messages to the terminal, can be safely removed once things are working
 
 When the `sshfs` command completes sucessfully you'll be dumped back to the command line with no output. You can verify that the mount completed properly by issuing `ls /data/media/0/sshfsmount` you should see the directory structure of your ssh home directory.  
 
@@ -123,13 +122,17 @@ In a shell on your android device type:
 su
 ssh-keygen
 ```
-Just press enter at the prompts here to generate a key with no passphrase. Your public key should now be in /data/.ssh/id_rsa.pub
-Now copy this key to your ssh server:
+Press enter at the prompts here to generate a key with no passphrase. Your public key should now be in /data/.ssh/id_rsa.pub
+Now copy this key to your ssh server like this:
 ```
 cat /data/.ssh/id_rsa.pub | ssh USER@SERVER "mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys"
 ```
 Replace USER with your ssh login name and SERVER with the server hostname or IP address  
-You'll have to enter your password here one last time and that's it! You'll no longer be prompted for a password when using sshfs. Note that you must do this for each server you with to set up passwordless login to.
+You'll have to enter your password here one last time. To actually use paswordless login, you must add `-o IdentityFile=/data/.ssh/id_rsa` from now on so that your sshfs command becomes something like:
+```
+sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o IdentityFile=/data/.ssh/id_rsa
+```
+You'll no longer be prompted for a password when using sshfs. Perfect for automated mounting and unmounting. Note that you must do this for each server you with to set up passwordless login to.
 
 Other usage ideas
 -----------------
@@ -141,7 +144,4 @@ Limitations
 -----------
 * Media files mounted this way will NOT be picked up automatically by an automated media scanner (media scanning over a network connection is a bad idea anyway).
 * Mounting to any arbitrary directory on your device has not been fully tested and may not always work. Mounting to /data/media/0/sshfsmount as in the example above works reliably for me, as does mounting to /data/local/sshfsmount. YMMV for mounting to other directories.
-* By default, error message reporting doesn't work. If the sshfs command encounters any errors it will return 1 and exit silently. sshfs prints its error messages to stderr which appaireently android sends to /dev/null. As a workaround for troubleshooting add `-o sshfs_debug -o debug` to get more verbose error messages to appear in the terminal, still all errors may not be visible.
-
-
-
+* Error message reporting doesn't work. If the sshfs command encounters any errors it will return 1 and exit silently so you're flying blind if things aren't working. sshfs prints its error messages to stderr which appaireently android sends to /dev/null. I've found that `-o sshfs_debug -o debug` can cause crashes themselves (especially with paswordless login) so you best not use those either.
