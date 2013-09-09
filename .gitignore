@@ -19,7 +19,7 @@ Makefile.in
 Makefile
 *.m4
 stamp-h*
-config.*
+#config.*
 /sshfs
 /ltmain.sh
 /configure
