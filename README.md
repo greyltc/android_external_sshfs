@@ -46,7 +46,6 @@ In a shell on your android device type:
 `sshfs -h`
 You'll see:
 ```
-sshfs -h
 usage: sshfs [user@]host:[dir] mountpoint [options]
 
 general options:
