@@ -19,8 +19,8 @@ This module will build a single binary executable file: 'sshfs' that will be ins
 
 This was only tested under cyanogenmod cm-10.2. It'll probably work fine in other versions of CM, but probably not with other roms (because a glib dependancy is satisfied by files in the Focal module, a CM app).  
 
-These steps assume:
-A) you have a working cyanogenmod build environment with the CM source tree located in ~/android/system   
+These steps assume:  
+A) you have a working cyanogenmod build environment with the CM source tree located in ~/android/system (see http://wiki.cyanogenmod.org/w/Development for instructions on how to get this)   
 and  
 B) that your deivice is running CM built from this tree  
 
@@ -37,14 +37,11 @@ After a successful compile, you should now see something like
 Pushing: system/xbin/sshfs
 5061 KB/s (125476 bytes in 0.024s)
 ```
-If you see that, you know the binary was built and pushed sucessfully to your device. Otherwise, the compile failed.
+If you see that, you know the binary was built and pushed sucessfully to your device. If you don't see that, keep trying.
 
 How to use
 ----------
-
-In a shell on your android device type:
-`sshfs -h`
-You'll see:
+In a shell on your android device type `sshfs -h`, you'll see:
 ```
 usage: sshfs [user@]host:[dir] mountpoint [options]
 
@@ -114,7 +111,7 @@ Your home folder on your ssh server is now mounted to your android device as if 
 Limitations
 -----------
 * Media files mounted this way will not be picked up automatically by an automated media scanner.
-* Mounting to any arbitrary directory doesn't always work, this may be because some directories are already fuse mounts and nested fuse mounting is failing. To be safe, mount in /data/local/
+* Mounting to any arbitrary directory doesn't always work (like directly to the SD card), this may be because some directories are already fuse mounts and nested fuse mounting seems to be unreliable. I've had the most luck with mounting to /data/local/
 * Errors are currently not being displayed anywhere (that I'm aware of). This means that if anything goes wrong with the command it simply returns 1 and dumps you back to the command line with no indication of what whent wrong.
 
 
