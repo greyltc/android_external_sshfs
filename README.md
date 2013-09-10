@@ -34,7 +34,7 @@ After a successful compile, you should now see something like
 Pushing: system/xbin/sshfs
 5061 KB/s (125476 bytes in 0.024s)
 ```
-If you see that, you know the binary was built and pushed successfully to your device. If you don't see that, keep trying, there's no point in continuing on.
+If you see that, you know the binary was built and pushed successfully to your device. If you don't see that, keep trying, there's no point in continuing further.
 
 ## How to use
 In a shell on your android device type `sshfs -h`, you'll see:
