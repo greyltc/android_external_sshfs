@@ -87,7 +87,7 @@ SSHFS options:
     -o SSHOPT=VAL          ssh options (see man ssh_config)
 ```
 
-This example assumes
+This example assumes  
 A) __you already have a ssh server__ running somewhere on a machine with hostname (or IP) SERVER that you can log into as USER  
 and  
 B) you have created an __empty directory__ on your device to mount to at the following location: `/data/media/0/sshfsmount`
