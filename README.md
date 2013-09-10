@@ -97,13 +97,14 @@ Make sure `/data/media/0/sshfsmount` exists and is an empty directory.
 In a shell on your android device type:  
 ```
 su
-sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no 
+sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o reconnect
 ```  
 Replace USER with your ssh login name and SERVER with the server hostname or IP address (note the colon after SERVER is intentional). You will be asked for your ssh password for USER.
 * `-o ro` means you'll mount the files as read only (recommended to prevent file damage because this project is experimental)
 * `-o allow_other` sets the permissions of the mounted files so that you can access them
 * `-o follow_symlinks` enables symlinks in your ssh share to work properly
-* `-o StrictHostKeyChecking=no` bypasses a prompt for a security measure used to prevent MITM attacks  
+* `-o StrictHostKeyChecking=no` bypasses a prompt for a security measure used to prevent MITM attacks 
+* `-o reconnect` allows for reconnection after interruption in network service 
 
 When the `sshfs` command completes successfully you'll be dumped back to the command line with no indication that it worked. You can verify that the mount completed properly by issuing `ls /data/media/0/sshfsmount` you should see the directory structure of your ssh home directory.  
 
@@ -135,7 +136,7 @@ You'll have to enter your password here one last time.
 To actually use paswordless login, you must add `-o IdentityFile=/data/.ssh/id_rsa` from now on so that your sshfs command becomes something like:
 ```
 su
-sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o IdentityFile=/data/.ssh/id_rsa
+sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o reconnect -o IdentityFile=/data/.ssh/id_rsa
 ```
 You'll no longer be prompted for a password when using sshfs. Perfect for automated mounting and unmounting. Note that you must do this for each server you with to set up passwordless login to.
 
