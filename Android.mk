@@ -1,7 +1,6 @@
-# Build sshfs
-
 LOCAL_PATH := $(call my-dir)
 
+# Build sshfs
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := sshfs.c cache.c compat/rand_r.c
@@ -17,7 +16,7 @@ LOCAL_C_INCLUDES := \
 	external/Focal/glib/android
 
 LOCAL_STATIC_LIBRARIES:= \
-	libfuse \
+	libfuse 
 
 LOCAL_SHARED_LIBRARIES:= \
 	libglib-2.0 \
@@ -33,5 +32,13 @@ LOCAL_MODULE:= sshfs
 LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
 
 include $(BUILD_EXECUTABLE)
+
+#need to make sure glib is built here:
+include $(CLEAR_VARS)
+include external/Focal/gnustl.mk
+
+include $(CLEAR_VARS)
+include external/Focal/glib/Android.mk
+
 
 
