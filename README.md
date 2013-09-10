@@ -27,7 +27,7 @@ git clone git@github.com:l3iggs/android_external_sshfs.git ~/android/system/exte
 cd ~/android/system/external/sshfs
 adb root
 adb remount
-mmp
+mmp -B
 ```  
 After a successful compile, you should now see something like
 ```
