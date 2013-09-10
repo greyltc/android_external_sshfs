@@ -137,7 +137,7 @@ You'll no longer be prompted for a password when using sshfs. Perfect for automa
 ## Other usage ideas
 After you setup passwordless login (as described above) you can:
 * Use the GScript Lite app to add a buttons to your homescreen that mount and unmount your files
-* Use the Tasker app to mount and unmount your files when you connect & disconnect to/from specific servers when you to specific Wi-Fi networks. For example, mount your home server when you connect to your home Wi-Fi and mount your work server when you connect to your work Wi-Fi.
+* Use the Tasker (paid) app to mount and unmount your files when you connect & disconnect to/from specific servers when you to specific Wi-Fi networks. For example, mount your home server when you connect to your home Wi-Fi and mount your work server when you connect to your work Wi-Fi.
 
 ## Less tested switches
 Here are some switches that are less tested but may be required to get things to work properly  in certain scenarios  
