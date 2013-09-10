@@ -107,6 +107,8 @@ Replace USER with your ssh login name and SERVER with the server hostname or IP 
 
 When the `sshfs` command completes successfully you'll be dumped back to the command line with no indication that it worked. You can verify that the mount completed properly by issuing `ls /data/media/0/sshfsmount` you should see the directory structure of your ssh home directory.  
 
+To mount a directory on the ssh server other than your home directory, add it after the colon `USER@SERVER:/some/path/to/mount`
+
 ### Unmounting/cleanup
 Any failed attempts at mounting will likely leave the mount point directory "dirty". This prevents the success of any future mount attempts. The "dirty" mountpoint can be "cleaned" by unmounting it with the following command. It's good practice to execute this command any time something goes wrong to ensure that future attempts at mounting are not foiled by a "dirty" mount point directory.
 ```
