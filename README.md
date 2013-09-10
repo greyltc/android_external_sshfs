@@ -34,7 +34,7 @@ After a successful compile, you should now see something like
 Pushing: system/xbin/sshfs
 5061 KB/s (125476 bytes in 0.024s)
 ```
-If you see that, you know the binary was built and pushed successfully to your device. If you don't see that, keep trying, there's no point in continuing on.
+If you see that, you know the binary was built and pushed successfully to your device. If you don't see that, keep trying, there's no point in continuing further.
 
 ## How to use
 In a shell on your android device type `sshfs -h`, you'll see:
@@ -87,11 +87,14 @@ SSHFS options:
     -o SSHOPT=VAL          ssh options (see man ssh_config)
 ```
 
-This example assumes __you already have a ssh server__ running somewhere on a machine with hostname (or IP) SERVER that you can log into as USER  
+This example assumes  
+A) __you already have a ssh server__ running somewhere on a machine with hostname (or IP) SERVER that you can log into as USER  
+and  
 B) you have created an __empty directory__ on your device to mount to at the following location: `/data/media/0/sshfsmount`
 
 ### Mounting
-Make sure `/data/media/0/sshfsmount` exists and is an empty directory and in a shell on your android device type:  
+Make sure `/data/media/0/sshfsmount` exists and is an empty directory.  
+In a shell on your android device type:  
 ```
 su
 sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no 
@@ -107,6 +110,7 @@ When the `sshfs` command completes successfully you'll be dumped back to the com
 ### Unmounting/cleanup
 Any failed attempts at mounting will likely leave the mount point directory "dirty". This prevents the success of any future mount attempts. The "dirty" mountpoint can be "cleaned" by unmounting it with the following command. It's good practice to execute this command any time something goes wrong to ensure that future attempts at mounting are not foiled by a "dirty" mount point directory.
 ```
+su
 umount /data/media/0/sshfsmount
 ```
 
@@ -133,8 +137,8 @@ You'll no longer be prompted for a password when using sshfs. Perfect for automa
 
 ## Other usage ideas
 After you setup passwordless login (as described above) you can:
-* Use the QuickTerminal app to add a buttons to your homescreen that mount and unmount your files
-* Use the Tasker app to mount and unmount your files when you connect & disconnect to/from specific servers when you to specific Wi-Fi networks. For example, mount your home server when you connect to your home Wi-Fi and mount your work server when you connect to your work Wi-Fi.
+* Use the GScript Lite app to add a buttons to your homescreen that mount and unmount your files
+* Use the Tasker (paid) app to mount and unmount your files when you connect & disconnect to/from specific servers when you to specific Wi-Fi networks. For example, mount your home server when you connect to your home Wi-Fi and mount your work server when you connect to your work Wi-Fi.
 
 ## Less tested switches
 Here are some switches that are less tested but may be required to get things to work properly  in certain scenarios  
