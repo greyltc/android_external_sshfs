@@ -87,11 +87,14 @@ SSHFS options:
     -o SSHOPT=VAL          ssh options (see man ssh_config)
 ```
 
-This example assumes __you already have a ssh server__ running somewhere on a machine with hostname (or IP) SERVER that you can log into as USER  
+This example assumes
+A) __you already have a ssh server__ running somewhere on a machine with hostname (or IP) SERVER that you can log into as USER  
+and  
 B) you have created an __empty directory__ on your device to mount to at the following location: `/data/media/0/sshfsmount`
 
 ### Mounting
-Make sure `/data/media/0/sshfsmount` exists and is an empty directory and in a shell on your android device type:  
+Make sure `/data/media/0/sshfsmount` exists and is an empty directory.  
+In a shell on your android device type:  
 ```
 su
 sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no 
