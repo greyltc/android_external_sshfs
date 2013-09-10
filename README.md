@@ -125,12 +125,14 @@ ssh-keygen
 Press enter at the prompts here to generate a key with no passphrase. Your public key should now be in /data/.ssh/id_rsa.pub
 Now copy this key to your ssh server like this:
 ```
+su
 cat /data/.ssh/id_rsa.pub | ssh USER@SERVER "mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys"
 ```
 Replace USER with your ssh login name and SERVER with the server hostname or IP address  
 You'll have to enter your password here one last time.  
 To actually use paswordless login, you must add `-o IdentityFile=/data/.ssh/id_rsa` from now on so that your sshfs command becomes something like:
 ```
+su
 sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o IdentityFile=/data/.ssh/id_rsa
 ```
 You'll no longer be prompted for a password when using sshfs. Perfect for automated mounting and unmounting. Note that you must do this for each server you with to set up passwordless login to.
