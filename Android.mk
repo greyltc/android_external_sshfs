@@ -33,12 +33,12 @@ LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
 
 include $(BUILD_EXECUTABLE)
 
-#need to make sure glib is built here:
-include $(CLEAR_VARS)
-include external/Focal/gnustl.mk
+#glib libraries are found when building for flo but not for mako, why?
+#include $(CLEAR_VARS)
+#include external/Focal/gnustl.mk
 
-include $(CLEAR_VARS)
-include external/Focal/glib/Android.mk
+#include $(CLEAR_VARS)
+#include external/Focal/glib/Android.mk
 
 
 
