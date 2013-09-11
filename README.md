@@ -97,7 +97,7 @@ Make sure `/data/media/0/sshfsmount` exists and is an empty directory.
 In a shell on your android device type:  
 ```
 su
-sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o reconnect
+sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o reconnect -o TCPKeepAlive=no
 ```  
 Replace USER with your ssh login name and SERVER with the server hostname or IP address (note the colon after SERVER is intentional). You will be asked for your ssh password for USER.
 * `-o ro` means you'll mount the files as read only (recommended to prevent file damage because this project is experimental)
@@ -105,6 +105,7 @@ Replace USER with your ssh login name and SERVER with the server hostname or IP 
 * `-o follow_symlinks` enables symlinks in your ssh share to work properly
 * `-o StrictHostKeyChecking=no` bypasses a prompt for a security measure used to prevent MITM attacks 
 * `-o reconnect` allows for reconnection after interruption in network service 
+* `-o TCPKeepAlive=no` prevents bried interruptions in network connectivity from bringing down the connection 
 
 When the `sshfs` command completes successfully you'll be dumped back to the command line with no indication that it worked. You can verify that the mount completed properly by issuing `ls /data/media/0/sshfsmount` you should see the directory structure of your ssh home directory.  
 
@@ -136,27 +137,17 @@ You'll have to enter your password here one last time.
 To actually use paswordless login, you must add `-o IdentityFile=/data/.ssh/id_rsa` from now on so that your sshfs command becomes something like:
 ```
 su
-sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o reconnect -o IdentityFile=/data/.ssh/id_rsa
+sshfs USER@SERVER: /data/media/0/sshfsmount -o allow_other -o ro -o follow_symlinks -o StrictHostKeyChecking=no -o reconnect -o TCPKeepAlive=no -o  IdentityFile=/data/.ssh/id_rsa
 ```
 You'll no longer be prompted for a password when using sshfs. Perfect for automated mounting and unmounting. Note that you must do this for each server you with to set up passwordless login to.
 
 ## Other usage ideas
 After you setup passwordless login (as described above) you can:
 * Use the GScript Lite app to add a buttons to your homescreen that mount and unmount your files
-* Use the Tasker (paid) app to mount and unmount your files when you connect & disconnect to/from specific servers when you to specific Wi-Fi networks. For example, mount your home server when you connect to your home Wi-Fi and mount your work server when you connect to your work Wi-Fi.
-
-## Less tested switches
-Here are some switches that are less tested but may be required to get things to work properly  in certain scenarios  
-`-o ServerAliveInterval=300` ServerAliveInterval  
-Sets a timeout interval in seconds after which if no data has been received from the server, ssh(1) will send a message through the encrypted channel to request a response from the server. The default is 0, indicating that these messages will not be sent to the server  
-
-`-o TCPKeepAlive=no` TCPKeepAlive  
-Specifies whether the system should send TCP keepalive messages to the other side.  If they are sent, death of the connection or crash of one of the machines will be properly noticed.  This option only uses TCP keepalives (as opposed to using ssh level keepalives), so takes a long time to notice when the connection dies.  As such, you probably want the ServerAliveInterval option as well. However, this means that connections will die if the route is down temporarily, and some people find it annoying.  
-The default is “yes” (to send TCP keepalive messages), and the client will notice if the network goes down or the remote host dies.  This is important in scripts, and many users want it too.  
-To disable TCP keepalive messages, the value should be set to “no”.  
+* The Tasker (paid) app becomes almost essential to maintain connectivity during network state changes. Setup Tasker tasks that execute the mount command when wifi and cellular connections go up and the unmount command when they go down. My testing shows this makes the mount bulletproof.
 
 ## Limitations
 * Media files mounted this way will NOT be picked up automatically by an automated media scanner (media scanning over a network connection is a bad idea anyway).
 * Mounting to any arbitrary directory on your device has not been fully tested and may not always work. Mounting to /data/media/0/sshfsmount as in the example above works reliably for me, as does mounting to /data/local/sshfsmount. YMMV for mounting to other directories.
 * Error message reporting doesn't work. If the sshfs command encounters any errors it will return 1 and exit silently so you're flying blind if things aren't working. sshfs prints its error messages to stderr which apparently android sends to /dev/null. I've found that `-o sshfs_debug -o debug` can cause crashes themselves (especially with paswordless login) so you best not use those either. Just don't make any mistakes and everything will be fine :^)
-* Connections are not maintained when the device's IP address changes (the underlying SSH connection breaks in this case). For example when the user switches from cellular to Wi-Fi. This could potentially be solved by something like mosh: http://mosh.mit.edu/
+* Connections are not maintained when the device's IP address changes (the underlying SSH connection breaks in this case). For example when the user switches from cellular to Wi-Fi the mountpoint will become disconnected. This could potentially be solved by something like mosh: http://mosh.mit.edu/ A readily available workaround is to use the paid Tasker app to manage tne mount point as the network state changes (see above).
