@@ -1,5 +1,5 @@
 # android_external_sshfs
-FUSE based ssh file system client for android devices
+sftp (secure file transfer program) client that uses FUSE to mount files and directories served by any SSH server to an andoird client, secure enough to mount over the internet
 
 ## Overview
 The code is mostly from here: http://fuse.sourceforge.net/sshfs.html It's been adapted to compile into the cyanogenmod android rom 
