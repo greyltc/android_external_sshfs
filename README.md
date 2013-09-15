@@ -16,6 +16,7 @@ This module will build a single binary executable file: 'sshfs' that will be ins
 
 This was only tested under cyanogenmod cm-10.2. It'll probably work fine in other versions of CM, but probably not with other roms (because a glib dependency is satisfied by files in the Focal module, a CM app).  
 
+
 These steps assume:  
 A) you have a working cyanogenmod build environment with the CM source tree located in ~/android/system (see http://wiki.cyanogenmod.org/w/Development for instructions on how to get this)   
 and  
