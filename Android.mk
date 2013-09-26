@@ -11,9 +11,9 @@ LOCAL_C_INCLUDES := \
 	$(TARGET_C_INCLUDES) \
 	external/fuse/include \
 	external/fuse/android \
+	external/glib \
 	external/glib/glib \
-	external/glib/glib/glib \
-	external/glib/glib/android
+	external/glib/android
 
 LOCAL_STATIC_LIBRARIES:= \
 	libfuse 
