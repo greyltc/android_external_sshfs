@@ -11,9 +11,9 @@ LOCAL_C_INCLUDES := \
 	$(TARGET_C_INCLUDES) \
 	external/fuse/include \
 	external/fuse/android \
-	external/Focal/glib \
-	external/Focal/glib/glib \
-	external/Focal/glib/android
+	external/glib/glib \
+	external/glib/glib/glib \
+	external/glib/glib/android
 
 LOCAL_STATIC_LIBRARIES:= \
 	libfuse 
@@ -32,13 +32,3 @@ LOCAL_MODULE:= sshfs
 LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
 
 include $(BUILD_EXECUTABLE)
-
-#glib libraries are found when building for flo but not for mako, why?
-#include $(CLEAR_VARS)
-#include external/Focal/gnustl.mk
-
-#include $(CLEAR_VARS)
-#include external/Focal/glib/Android.mk
-
-
-
