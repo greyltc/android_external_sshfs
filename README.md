@@ -14,7 +14,7 @@ This project provides (for free) the functionality promised by the currently bro
 ## How to build and install
 This module will build a single binary executable file: 'sshfs' that will be installed into /system/xbin on your device
 
-This was only tested under cyanogenmod cm-10.2. It'll probably work fine in other versions of CM, but probably not with other roms (because a glib dependency is satisfied by files in the Focal module, a CM app).  
+This was only tested under cyanogenmod cm-10.2. It'll probably work fine in other roms so long as they have FUSE support. 
 
 
 These steps assume:  
@@ -25,6 +25,7 @@ B) that your device is running CM built from this tree
 To build and install onto your device issue the following commands in your build environment:  
 ```
 git clone git@github.com:l3iggs/android_external_sshfs.git ~/android/system/external/sshfs
+git clone git@github.com:l3iggs/android_external_glib.git ~/android/system/external/glib
 cd ~/android/system/external/sshfs
 adb root
 adb remount
