@@ -23,7 +23,8 @@ LOCAL_SHARED_LIBRARIES:= \
 	libgthread-2.0 \
 	libgobject-2.0 \
 	libgmodule-2.0 \
-	libcutils
+	libcutils \
+	libdl
 
 LOCAL_MODULE_TAGS := optional
 
