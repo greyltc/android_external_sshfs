@@ -1,42 +1,60 @@
 # android_external_sshfs
-sftp (secure file transfer program) client that uses FUSE to mount files and directories served by any SSH server to an andoird client, secure enough to mount over the internet
+sftp (secure file transfer program) client that uses FUSE to mount files and directories served by any SSH server to an android client, secure enough to mount over the internet
 
 ## Overview
-The code is mostly from here: http://fuse.sourceforge.net/sshfs.html It's been adapted to compile into the cyanogenmod android rom 
+The code is mostly from the FUSE project's sshfs implementation, found [here](http://fuse.sourceforge.net/sshfs.html). It's been adapted to compile into the cyanogenmod android rom.
 
 This project will allow you to *securely* mount a folder served up by an ssh server to your android device from anywhere with a network connection.  
 
 A typical use case for this would be that you have a phone with 8GB of non-expandable storage and you want access to your 100GB music collection while you're on the go (either via cell or Wi-Fi data access). This project allows all the apps on your phone to see your entire music/movie/book/document/whatever collection as if your files were on your device (if your data connection permits it).  
 
-This project provides (for free) the functionality promised by the currently broken and ~$2.75 app in the play store called SSHFSAndroid: https://play.google.com/store/apps/details?id=com.chaos9k.sshfsandroid  
+This project provides (for free) the functionality promised by the currently broken and ~$2.75 app in the play store called [SSHFSAndroid](https://play.google.com/store/apps/details?id=com.chaos9k.sshfsandroid).  
 
 
 ## How to build and install
-This module will build a single binary executable file: 'sshfs' that will be installed into /system/xbin on your device
+This module will build a single binary executable file: 'sshfs' that will be installed into /system/xbin on your device, if you follow the instructions provided.
+
+During the installation, some glib-2.0 libraries will also be built and installed on your phone.
 
 This was only tested under cyanogenmod cm-10.2. It'll probably work fine in other roms so long as they have FUSE support. 
 
+However, it should be noted that there have been reports with this not working properly in CM12+ (Lollipop). If, after you build this, the sshfs directory structure disappears after opening a file, rest assured that the developer is working to find the source of the problem.
+
+It should also be noted that this has only been tested with SuperSu. You may come across unknown issues when using a different SU app.
+
 
 These steps assume:  
-A) you have a working cyanogenmod build environment with the CM source tree located in ~/android/system (see http://wiki.cyanogenmod.org/w/Development for instructions on how to get this)   
-and  
-B) that your device is running CM built from this tree  
+1. You have a working cyanogenmod or cm-based rom's build environment with the rom's source tree located in ~/android/system (see [here](http://wiki.cyanogenmod.org/w/Development) for instructions on how to get this, and consult your rom's forum thread or auther regarding its source if you have a cm-based rom)  
+2. Your device's currently-installed rom is built from this tree  
+3. You have successfully built the entire rom image, which makes sure all required libraries are built, and also ensures you have a *working* source tree  
+4. Your device is ready to be connected via adb to your machine containing this build environment, either through wifi or USB (the adb commands in the instructions below are for connecting via USB. Tweak at your leasure)
 
-To build and install onto your device issue the following commands in your build environment:  
+Note: These instructions __will__ differ if you are building in a system other than a Linux distro. Mac and Windows users will need to either run a Virtual Machine for the build environment (recommended) or consult a CyanogenMod build guide that is specific to their operating system (and their operating system's release version, most likely).
+
+To build and install onto your device, issue the following commands in your build environment:  
 ```
-git clone git@github.com:l3iggs/android_external_sshfs.git ~/android/system/external/sshfs
-git clone git@github.com:l3iggs/android_external_glib.git ~/android/system/external/glib
-cd ~/android/system/external/sshfs
+git clone https://github.com/l3iggs/android_external_sshfs.git ~/android/system/external/sshfs
+git clone https://github.com/l3iggs/android_external_glib.git -b cm-10.2 ~/android/system/external/glib
 adb root
 adb remount
+cd ~/android/system/
+source build/envsetup.sh
+lunch
+```
+Running the lunch command will prompt you to choose a device. Choose the device that your source tree supports (presumably the one you are building for).  
+*!!! Your phone should be plugged in at this point !!!*  
+```
+cd ~/android/system/external/glib
+mmp -B
+cd ~/android/system/external/sshfs
 mmp -B
 ```  
-After a successful compile, you should now see something like
+After a successful compile, you should see something like this at the end of your terminal's output:
 ```
 Pushing: system/xbin/sshfs
 5061 KB/s (125476 bytes in 0.024s)
 ```
-If you see that, you know the binary was built and pushed successfully to your device. If you don't see that, keep trying, there's no point in continuing further.
+If you see that, you know the binary was built and pushed successfully to your device. If you don't see that, make sure you have a proper build environment. Usually these commands will show errors pointing to missing files. If it fails to find a file in "~/android/system/vendor/..." and you have already successfully built your rom with your source tree, you most likely chose the wrong device when you ran "lunch" or you never ran it at all.
 
 ## How to use
 In a shell on your android device type `sshfs -h`, you'll see:
@@ -89,10 +107,10 @@ SSHFS options:
     -o SSHOPT=VAL          ssh options (see man ssh_config)
 ```
 
-This example assumes  
-A) __you already have a ssh server__ running somewhere on a machine with hostname (or IP) SERVER that you can log into as USER  
-and  
-B) you have created an __empty directory__ on your device to mount to at the following location: `/data/media/0/sshfsmount`
+The following example assumes:  
+1. __You already have an ssh server__ running somewhere on a machine with hostname (or IP) SERVER that you can log into as USER  
+2. You have created an __empty directory__ on your device to mount to at the following location: `/data/media/0/sshfsmount`  
+3. You have turned off namespace separation in your SU app, if the option exists. If you are running certain android versions and you have SuperSu (which is recommended for 4.0+), you can turn this off in SuperSu's settings. Be aware that if namespace separation is on, you will not be able to access the files outside of the app you use to initiate the connection, because namespace separation forces fuse-mounted directories to be on a per-app basis. If you change this setting, it is recommended to reboot your device before testing sshfs.
 
 ### Mounting
 Make sure `/data/media/0/sshfsmount` exists and is an empty directory.  
