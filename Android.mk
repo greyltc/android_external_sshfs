@@ -16,13 +16,13 @@ LOCAL_C_INCLUDES := \
 	external/glib/android
 
 LOCAL_STATIC_LIBRARIES:= \
-	libfuse 
-
-LOCAL_SHARED_LIBRARIES:= \
 	libglib-2.0 \
 	libgthread-2.0 \
 	libgobject-2.0 \
 	libgmodule-2.0 \
+	libfuse 
+
+LOCAL_SHARED_LIBRARIES:= \
 	libcutils \
 	libdl
 
