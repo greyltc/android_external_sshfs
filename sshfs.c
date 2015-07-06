@@ -3365,8 +3365,9 @@ static int read_password(void)
 	int n;
 
 	sshfs.password = mmap(NULL, size, PROT_READ | PROT_WRITE,
-			      MAP_PRIVATE | MAP_ANONYMOUS | MAP_LOCKED,
+			      MAP_PRIVATE | MAP_ANONYMOUS,
 			      -1, 0);
+
 	if (sshfs.password == MAP_FAILED) {
 		perror("Failed to allocate locked page for password");
 		return -1;
