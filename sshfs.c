@@ -169,7 +169,7 @@ struct read_req {
 };
 
 struct read_chunk {
-	off_t offset;
+	loff_t offset;
 	size_t size;
 	int refs;
 	long modifver;
@@ -183,7 +183,7 @@ struct sshfs_file {
 	pthread_cond_t write_finished;
 	int write_error;
 	struct read_chunk *readahead;
-	off_t next_pos;
+	loff_t next_pos;
 	int is_seq;
 	int connver;
 	int modifver;
@@ -2381,7 +2381,7 @@ static int sshfs_chown(const char *path, uid_t uid, gid_t gid)
 	return err;
 }
 
-static int sshfs_truncate_workaround(const char *path, off_t size,
+static int sshfs_truncate_workaround(const char *path, loff_t size,
                                      struct fuse_file_info *fi);
 
 static void sshfs_inc_modifver(void)
@@ -2391,7 +2391,7 @@ static void sshfs_inc_modifver(void)
 	pthread_mutex_unlock(&sshfs.lock);
 }
 
-static int sshfs_truncate(const char *path, off_t size)
+static int sshfs_truncate(const char *path, loff_t size)
 {
 	int err;
 	struct buffer buf;
@@ -2633,7 +2633,7 @@ static void sshfs_read_begin(struct request *req)
 }
 
 static struct read_chunk *sshfs_send_read(struct sshfs_file *sf, size_t size,
-					  off_t offset)
+					  loff_t offset)
 {
 	struct read_chunk *chunk = g_new0(struct read_chunk, 1);
 	struct buffer *handle = &sf->handle;
@@ -2737,7 +2737,7 @@ out:
 }
 
 static int sshfs_sync_read(struct sshfs_file *sf, char *buf, size_t size,
-                           off_t offset)
+                           loff_t offset)
 {
 	struct read_chunk *chunk;
 
@@ -2745,7 +2745,7 @@ static int sshfs_sync_read(struct sshfs_file *sf, char *buf, size_t size,
 	return wait_chunk(chunk, buf, size);
 }
 
-static void submit_read(struct sshfs_file *sf, size_t size, off_t offset,
+static void submit_read(struct sshfs_file *sf, size_t size, loff_t offset,
                         struct read_chunk **chunkp)
 {
 	struct read_chunk *chunk;
@@ -2759,7 +2759,7 @@ static void submit_read(struct sshfs_file *sf, size_t size, off_t offset,
 	pthread_mutex_unlock(&sshfs.lock);
 }
 
-static struct read_chunk *search_read_chunk(struct sshfs_file *sf, off_t offset)
+static struct read_chunk *search_read_chunk(struct sshfs_file *sf, loff_t offset)
 {
 	struct read_chunk *ch = sf->readahead;
 	if (ch && ch->offset == offset && ch->modifver == sshfs.modifver) {
@@ -2770,7 +2770,7 @@ static struct read_chunk *search_read_chunk(struct sshfs_file *sf, off_t offset)
 }
 
 static int sshfs_async_read(struct sshfs_file *sf, char *rbuf, size_t size,
-                            off_t offset)
+                            loff_t offset)
 {
 	int res = 0;
 	size_t total = 0;
@@ -2819,7 +2819,7 @@ static int sshfs_async_read(struct sshfs_file *sf, char *rbuf, size_t size,
 	return total;
 }
 
-static int sshfs_read(const char *path, char *rbuf, size_t size, off_t offset,
+static int sshfs_read(const char *path, char *rbuf, size_t size, loff_t offset,
                       struct fuse_file_info *fi)
 {
 	struct sshfs_file *sf = get_sshfs_file(fi);
@@ -2863,7 +2863,7 @@ static void sshfs_write_end(struct request *req)
 }
 
 static int sshfs_async_write(struct sshfs_file *sf, const char *wbuf,
-			     size_t size, off_t offset)
+			     size_t size, loff_t offset)
 {
 	int err = 0;
 	struct buffer *handle = &sf->handle;
@@ -2920,7 +2920,7 @@ static void sshfs_sync_write_end(struct request *req)
 
 
 static int sshfs_sync_write(struct sshfs_file *sf, const char *wbuf,
-			    size_t size, off_t offset)
+			    size_t size, loff_t offset)
 {
 	int err = 0;
 	struct buffer *handle = &sf->handle;
@@ -2962,7 +2962,7 @@ static int sshfs_sync_write(struct sshfs_file *sf, const char *wbuf,
 }
 
 static int sshfs_write(const char *path, const char *wbuf, size_t size,
-                       off_t offset, struct fuse_file_info *fi)
+                       loff_t offset, struct fuse_file_info *fi)
 {
 	int err;
 	struct sshfs_file *sf = get_sshfs_file(fi);
@@ -3056,7 +3056,7 @@ static int sshfs_create(const char *path, mode_t mode,
 	return sshfs_open_common(path, mode, fi);
 }
 
-static int sshfs_ftruncate(const char *path, off_t size,
+static int sshfs_ftruncate(const char *path, loff_t size,
                            struct fuse_file_info *fi)
 {
 	int err;
@@ -3123,16 +3123,16 @@ static int sshfs_truncate_zero(const char *path)
 	return err;
 }
 
-static size_t calc_buf_size(off_t size, off_t offset)
+static size_t calc_buf_size(loff_t size, loff_t offset)
 {
 	return offset + sshfs.max_read < size ? sshfs.max_read : size - offset;
 }
 
-static int sshfs_truncate_shrink(const char *path, off_t size)
+static int sshfs_truncate_shrink(const char *path, loff_t size)
 {
 	int res;
 	char *data;
-	off_t offset;
+	loff_t offset;
 	struct fuse_file_info fi;
 
 	data = calloc(size, 1);
@@ -3174,7 +3174,7 @@ out:
 	return res;
 }
 
-static int sshfs_truncate_extend(const char *path, off_t size,
+static int sshfs_truncate_extend(const char *path, loff_t size,
                                  struct fuse_file_info *fi)
 {
 	int res;
@@ -3209,7 +3209,7 @@ static int sshfs_truncate_extend(const char *path, off_t size,
  * If new size is greater than current size, then write a zero byte to
  * the new end of the file.
  */
-static int sshfs_truncate_workaround(const char *path, off_t size,
+static int sshfs_truncate_workaround(const char *path, loff_t size,
                                      struct fuse_file_info *fi)
 {
 	if (size == 0)
