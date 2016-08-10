@@ -33,8 +33,8 @@ Note: These instructions __will__ differ if you are building in a system other t
 
 To build and install onto your device, issue the following commands in your build environment:  
 ```
-git clone https://github.com/l3iggs/android_external_sshfs.git ~/android/system/external/sshfs
-git clone https://github.com/l3iggs/android_external_glib.git -b cm-10.2 ~/android/system/external/glib
+git clone https://github.com/greyltc/android_external_sshfs.git ~/android/system/external/sshfs
+git clone https://github.com/greyltc/android_external_glib.git -b cm-10.2 ~/android/system/external/glib
 adb root
 adb remount
 cd ~/android/system/
@@ -125,7 +125,7 @@ Replace USER with your ssh login name and SERVER with the server hostname or IP 
 * `-o follow_symlinks` enables symlinks in your ssh share to work properly
 * `-o StrictHostKeyChecking=no` bypasses a prompt for a security measure used to prevent MITM attacks 
 * `-o reconnect` allows for reconnection after interruption in network service 
-* `-o TCPKeepAlive=no` prevents bried interruptions in network connectivity from bringing down the connection 
+* `-o TCPKeepAlive=no` prevents interruptions in network connectivity from bringing down the connection 
 
 When the `sshfs` command completes successfully you'll be dumped back to the command line with no indication that it worked. You can verify that the mount completed properly by issuing `ls /data/media/0/sshfsmount` you should see the directory structure of your ssh home directory.  
 
